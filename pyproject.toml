@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tool-sentinel"
+version = "0.1.0"
+authors = [
+    { name="Gwendal Minguy-Pèlerin", email="gwendalminguy@outlook.fr" }
+]
+description = "Guiding AI code agent."
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent"
+]
+license = { file="LICENSE" }
+dependencies = [
+    "ollama>=0.6.2,<0.7.0",
+    "python-dotenv>=1.2.2,<1.3.0",
+    "typer>=0.26.7,<0.27.0"
+]
+keywords = ["cli", "devtools", "agent", "code", "ai", "assistant", "productivity"]
+
+[project.scripts]
+sentinel = "sentinel.cli.main:main"
+
+[project.urls]
+Homepage = "https://github.com/gwendalminguy/tool-sentinel"
+Repository = "https://github.com/gwendalminguy/tool-sentinel"
+
+[tool.setuptools.packages.find]
+where = ["src"]
