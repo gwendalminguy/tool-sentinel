@@ -26,7 +26,7 @@ dependencies = [
 keywords = ["cli", "devtools", "agent", "code", "ai", "assistant", "productivity"]
 
 [project.scripts]
-sentinel = "sentinel.cli.main:main"
+sentinel = "sentinel.cli.main:app"
 
 [project.urls]
 Homepage = "https://github.com/gwendalminguy/tool-sentinel"
