@@ -4,6 +4,7 @@ Sentinel CLI Entry Point
 """
 from sentinel.llm.client import OllamaClient
 
+import os
 import typer
 
 
@@ -15,9 +16,11 @@ def ask(prompt: str = typer.Argument(..., help="Question to ask to the LLM.")):
     Ask the LLM a question and print the response.
     """
     client = OllamaClient()
-    response = client.generate(prompt)
 
-    print(response)
+    if prompt.strip():
+        response = client.generate(prompt)
+
+        print(response)
 
 
 @app.command()
@@ -27,8 +30,20 @@ def chat():
     """
     client = OllamaClient()
 
+    print("Sentinel Interactive Chat Mode ('/exit' to quit)")
+
     while True:
         prompt = input("> ")
+
+        if prompt.strip().lower() == "/exit":
+            break
+        elif prompt.strip().lower() == "/clear":
+            os.system("clear")
+            continue
+
+        if not prompt.strip():
+            continue
+
         response = client.generate(prompt)
 
         print(f"> {response}")
