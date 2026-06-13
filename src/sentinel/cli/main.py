@@ -3,6 +3,10 @@ sentinel/cli/main.py
 Sentinel CLI Entry Point
 """
 from sentinel.llm.client import OllamaClient
+from sentinel.tools.list_directory import ListDirectory
+from sentinel.tools.read_file import ReadFile
+from sentinel.tools.search_text import SearchText
+from rich import print
 
 import os
 import typer
@@ -47,6 +51,42 @@ def chat():
         response = client.generate(prompt)
 
         print(f"> {response}")
+
+
+@app.command()
+def read(path: str):
+    """
+    Read the content of a file from disk.
+    """
+    tool = ReadFile()
+    path = os.path.abspath(path)
+
+    content = tool.execute(path)
+    print(content)
+
+
+@app.command()
+def ls(path: str):
+    """
+    List the content of a directory.
+    """
+    tool = ListDirectory()
+    path = os.path.abspath(path)
+
+    elements = tool.execute(path)
+    print(elements)
+
+
+@app.command()
+def search(path: str, query: str):
+    """
+    Search for a text pattern in files.
+    """
+    tool = SearchText()
+    path = os.path.abspath(path)
+
+    elements = tool.execute(path, query)
+    print(elements)
 
 
 if __name__ == "__main__":
