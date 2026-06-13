@@ -12,13 +12,20 @@ class OllamaClient():
         self.model = model
         self.system_prompt = system_prompt
     
-    def generate(self, prompt: str) -> str:
-        messages = []
+    def generate(self, prompt: str | None = None, messages: list | None = None) -> str:
+        if messages is None:
+            messages = []
 
-        if self.system_prompt:
-            messages.append({"role": "system", "content": self.system_prompt})
+            if self.system_prompt:
+                messages.append({
+                    "role": "system",
+                    "content": self.system_prompt
+                })
 
-        messages.append({"role": "user", "content": prompt})
+            messages.append({
+                "role": "user",
+                "content": prompt
+            })
 
         response = self.client.chat(
             model=self.model,
