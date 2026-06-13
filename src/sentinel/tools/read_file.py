@@ -11,6 +11,14 @@ class ReadFile():
     name = "read_file"
     description = "Read the content of a file from disk."
 
-    def execute(self, path: str) -> str:
+    def execute(self, path: str, start: int = None, end: int = None) -> str:
         with open(path) as file:
-            return file.read()
+            lines = file.readlines()
+
+            if start is not None or end is not None:
+                start = start or 1
+                end = end or len(lines)
+
+                lines = lines[start-1:end]
+
+            return "".join(lines)
