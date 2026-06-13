@@ -7,7 +7,7 @@ from sentinel.tools.list_directory import ListDirectory
 from sentinel.tools.read_file import ReadFile
 from sentinel.tools.search_text import SearchText
 from sentinel.utils.context import build_code_context
-from sentinel.utils.search import group_results
+from sentinel.utils.search import group_results, rank_results
 from rich import print
 from typing import Annotated
 
@@ -39,7 +39,7 @@ def chat():
 
     history = []
 
-    print("Sentinel Interactive Chat Mode ('/exit' to quit)")
+    print("\nSentinel Interactive Chat Mode ('/exit' to quit)")
 
     while True:
         prompt = input("> ")
@@ -119,8 +119,13 @@ def explain(path: str, symbol: str):
         print(f"No results found for symbol '{symbol}'.")
         return
 
-    groups = group_results(elements)
+    # Score and rank search results
+    ranked = rank_results(elements, symbol)
 
+    # Group results by file
+    groups = group_results(ranked)
+
+    # Build context by adding previous and next lines
     context = build_code_context(groups)
 
     prompt = f"""
