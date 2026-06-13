@@ -12,7 +12,7 @@ class ReadFile():
     description = "Read the content of a file from disk."
 
     def execute(self, path: str, start: int = None, end: int = None) -> str:
-        with open(path) as file:
+        with open(path, "r", encoding="utf-8") as file:
             lines = file.readlines()
 
             if start is not None or end is not None:
