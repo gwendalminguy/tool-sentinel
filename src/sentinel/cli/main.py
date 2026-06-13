@@ -22,7 +22,7 @@ def ask(prompt: str = typer.Argument(..., help="Question to ask to the LLM.")):
     client = OllamaClient()
 
     if prompt.strip():
-        response = client.generate(prompt)
+        response = client.generate(prompt=prompt)
 
         print(response)
 
@@ -34,6 +34,8 @@ def chat():
     """
     client = OllamaClient()
 
+    history = []
+
     print("Sentinel Interactive Chat Mode ('/exit' to quit)")
 
     while True:
@@ -43,12 +45,17 @@ def chat():
             break
         elif prompt.strip().lower() == "/clear":
             os.system("clear")
+            history = []
             continue
 
         if not prompt.strip():
             continue
 
-        response = client.generate(prompt)
+        history.append({"role": "user", "content": prompt})
+
+        response = client.generate(messages=history)
+
+        history.append({"role": "assistant", "content": response})
 
         print(f"> {response}")
 
