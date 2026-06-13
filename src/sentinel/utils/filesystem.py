@@ -2,10 +2,12 @@
 sentinel/utils/filesystem.py
 FileSystem Utility Functions
 """
+from collections.abc import Iterator
+
 import os
 
 
-def iter_files(path: str):
+def iter_files(path: str) -> Iterator[str]:
     """
     Yield all file paths from a directory tree.
 
