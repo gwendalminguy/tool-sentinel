@@ -16,8 +16,8 @@ class ReadFile():
             lines = file.readlines()
 
             if start is not None or end is not None:
-                start = start or 1
-                end = end or len(lines)
+                start = max(1, start)
+                end = min(len(lines), end)
 
                 lines = lines[start-1:end]
 
