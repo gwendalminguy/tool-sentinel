@@ -22,7 +22,7 @@ def group_results(results: list[dict]) -> list[dict]:
             "content": item["content"]
         })
 
-    elements = [{"path": path, "occurences": occurence} for path, occurence in groups.items()]
+    elements = [{"path": path, "occurrences": occurrence} for path, occurrence in groups.items()]
 
     return elements
         
