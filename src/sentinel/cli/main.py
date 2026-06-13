@@ -7,6 +7,7 @@ from sentinel.tools.list_directory import ListDirectory
 from sentinel.tools.read_file import ReadFile
 from sentinel.tools.search_text import SearchText
 from rich import print
+from typing import Annotated
 
 import os
 import typer
@@ -61,14 +62,18 @@ def chat():
 
 
 @app.command()
-def read(path: str):
+def read(
+    path: str, 
+    start: Annotated[int, typer.Argument()] = None,
+    end: Annotated[int, typer.Argument()] = None,
+):
     """
     Read the content of a file from disk.
     """
     tool = ReadFile()
     path = os.path.abspath(path)
 
-    content = tool.execute(path)
+    content = tool.execute(path, start, end)
     print(content)
 
 
