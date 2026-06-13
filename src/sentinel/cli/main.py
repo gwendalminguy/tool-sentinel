@@ -6,6 +6,8 @@ from sentinel.llm.client import OllamaClient
 from sentinel.tools.list_directory import ListDirectory
 from sentinel.tools.read_file import ReadFile
 from sentinel.tools.search_text import SearchText
+from sentinel.utils.context import build_code_context
+from sentinel.utils.search import group_results
 from rich import print
 from typing import Annotated
 
@@ -99,6 +101,36 @@ def search(path: str, query: str):
 
     elements = tool.execute(path, query)
     print(elements)
+
+
+@app.command()
+def explain(path: str, symbol: str):
+    """
+    Explain a symbol.
+    """
+    client = OllamaClient()
+
+    tool = SearchText()
+    path = os.path.abspath(path)
+
+    elements = tool.execute(path, symbol)
+
+    if not elements:
+        print(f"No results found for symbol '{symbol}'.")
+        return
+
+    groups = group_results(elements)
+
+    context = build_code_context(groups)
+
+    prompt = f"""
+    Explain the symbol '{symbol}' using the following code context.
+    {context}
+    """
+
+    response = client.generate(prompt=prompt)
+
+    print(response)
 
 
 if __name__ == "__main__":
