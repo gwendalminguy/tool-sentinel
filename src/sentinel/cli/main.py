@@ -18,7 +18,9 @@ import typer
 app = typer.Typer()
 
 @app.command()
-def ask(prompt: str = typer.Argument(..., help="Question to ask to the LLM.")):
+def ask(
+    prompt: Annotated[str, typer.Argument(help="Question to ask to the LLM.")]
+):
     """
     Ask the LLM a question and print the response.
     """
@@ -65,9 +67,9 @@ def chat():
 
 @app.command()
 def read(
-    path: str, 
-    start: Annotated[int, typer.Argument()] = None,
-    end: Annotated[int, typer.Argument()] = None,
+    path: Annotated[str, typer.Argument(help="Path of the file to read.")], 
+    start: Annotated[int | None, typer.Option("--start", "-s", help="Start line number.")] = None,
+    end: Annotated[int | None, typer.Option("--end", "-e", help="End line number.")] = None
 ):
     """
     Read the content of a file from disk.
@@ -76,11 +78,18 @@ def read(
     path = os.path.abspath(path)
 
     content = tool.execute(path, start, end)
+
+    if not content:
+        print(f"No content found.")
+        return
+
     print(content)
 
 
 @app.command()
-def ls(path: str):
+def ls(
+    path: Annotated[str, typer.Argument(help="Path of the directory to list.")]
+):
     """
     List the content of a directory.
     """
@@ -88,11 +97,15 @@ def ls(path: str):
     path = os.path.abspath(path)
 
     elements = tool.execute(path)
+
     print(elements)
 
 
 @app.command()
-def search(path: str, query: str):
+def search(
+    path: Annotated[str, typer.Argument(help="Path of the directory or file to search for the pattern.")],
+    query: Annotated[str, typer.Argument(help="Pattern to search for.")]
+):
     """
     Search for a text pattern in files.
     """
@@ -100,11 +113,16 @@ def search(path: str, query: str):
     path = os.path.abspath(path)
 
     elements = tool.execute(path, query)
+
     print(elements)
 
 
 @app.command()
-def explain(path: str, symbol: str):
+def explain(
+    path: Annotated[str, typer.Argument(help="Path of the directory to search for the symbol.")],
+    symbol: Annotated[str, typer.Argument(help="Symbol to explain.")],
+    top: Annotated[int, typer.Option("--top", "-t", help="Number of search results to analyze.")] = 5
+):
     """
     Explain a symbol.
     """
@@ -120,7 +138,7 @@ def explain(path: str, symbol: str):
         return
 
     # Score and rank search results
-    ranked = rank_results(elements, symbol)
+    ranked = rank_results(elements, symbol, top)
 
     # Group results by file
     groups = group_results(ranked)
