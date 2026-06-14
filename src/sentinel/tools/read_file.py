@@ -15,10 +15,18 @@ class ReadFile():
         with open(path, "r", encoding="utf-8") as file:
             lines = file.readlines()
 
-            if start is not None or end is not None:
+            # Define start line
+            if start is not None:
                 start = max(1, start)
-                end = min(len(lines), end)
+            else:
+                start = 1
 
-                lines = lines[start-1:end]
+            # Define end line
+            if end is not None:
+                end = min(len(lines), end)
+            else:
+                end = len(lines)
+
+            lines = lines[start-1:end]
 
             return "".join(lines)
