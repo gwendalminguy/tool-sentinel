@@ -7,8 +7,7 @@ from sentinel.tools.find_definition import FindDefinition
 from sentinel.tools.list_directory import ListDirectory
 from sentinel.tools.read_file import ReadFile
 from sentinel.tools.search_text import SearchText
-from sentinel.utils.context import build_code_context
-from sentinel.utils.search import group_results, rank_results
+from sentinel.utils.context import build_definition_context
 from rich import print
 from typing import Annotated
 
@@ -129,26 +128,21 @@ def explain(
     """
     client = OllamaClient()
 
-    tool = SearchText()
+    tool = FindDefinition()
     path = os.path.abspath(path)
 
-    elements = tool.execute(path, symbol)
+    definitions = tool.execute(path, symbol)
 
-    if not elements:
-        print(f"No results found for symbol '{symbol}'.")
+    if not definitions:
+        print(f"No definition found for symbol '{symbol}'.")
         return
 
-    # Score and rank search results
-    ranked = rank_results(elements, symbol, top)
-
-    # Group results by file
-    groups = group_results(ranked)
-
-    # Build context by adding previous and next lines
-    context = build_code_context(groups)
+    context = build_definition_context(definitions)
 
     prompt = f"""
-    Explain the symbol '{symbol}' using the following code context.
+    You are a code analysis assistant.
+
+    Explain the symbol '{symbol}' based only on the following code context:
     {context}
     """
 
