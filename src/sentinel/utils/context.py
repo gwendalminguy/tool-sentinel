@@ -30,3 +30,26 @@ def build_search_context(groups: list[dict]) -> str:
                     result += f"{i+1:4} | {lines[i]}"
 
     return result
+
+
+def build_definition_context(elements: list[dict]) -> str:
+    """
+    Build context for each definition of a list.
+    """
+    result = ""
+
+    for element in elements:
+        path = element["path"]
+
+        result += f"\nFILE: {path}\n"
+        result += f"\nDEFINITION:\n"
+
+        definition = element["definition"].split("\n")
+
+        start = element["start_line"]
+        end = element["end_line"]
+        
+        for i, line in enumerate(definition):
+            result += f"{start+i:4} | {line}\n"
+
+    return result
