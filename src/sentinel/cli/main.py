@@ -3,6 +3,7 @@ sentinel/cli/main.py
 Sentinel CLI Entry Point
 """
 from sentinel.llm.client import OllamaClient
+from sentinel.tools.find_definition import FindDefinition
 from sentinel.tools.list_directory import ListDirectory
 from sentinel.tools.read_file import ReadFile
 from sentinel.tools.search_text import SearchText
@@ -154,6 +155,28 @@ def explain(
     response = client.generate(prompt=prompt)
 
     print(response)
+
+
+@app.command()
+def find(
+    path: Annotated[str, typer.Argument(help="Path of the directory to search for the symbol.")],
+    symbol: Annotated[str, typer.Argument(help="Symbol to find.")]
+):
+    """
+    Find a symbol definition.
+    """
+    client = OllamaClient()
+
+    tool = FindDefinition()
+    path = os.path.abspath(path)
+
+    elements = tool.execute(path, symbol)
+
+    if not elements:
+        print(f"No results found for symbol '{symbol}'.")
+        return
+
+    print(elements)
 
 
 if __name__ == "__main__":
