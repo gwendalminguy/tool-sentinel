@@ -5,9 +5,9 @@ Context Utility Functions
 import os
 
 
-def build_code_context(groups: list[dict]) -> str:
+def build_search_context(groups: list[dict]) -> str:
     """
-    Build context around each line of code of a list.
+    Build context around each line of code of a list of search results.
     """
     result = ""
 
