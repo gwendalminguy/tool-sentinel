@@ -20,8 +20,8 @@ class SearchText():
 
         for file_path in iter_files(path):
             try:
-                with open(file_path, "r", encoding="utf-8") as f:
-                    for i, line in enumerate(f, start=1):
+                with open(file_path, "r", encoding="utf-8") as file:
+                    for i, line in enumerate(file, start=1):
                         if query_lower in line.lower():
                             results.append({
                                 "path": file_path,
