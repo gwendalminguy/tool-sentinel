@@ -5,6 +5,7 @@ FindDefinition Tool Definition
 from sentinel.utils.filesystem import iter_files
 
 import ast
+import os
 
 
 class FindDefinition():
@@ -19,9 +20,14 @@ class FindDefinition():
         query_lower = query.lower()
 
         for file_path in iter_files(path):
+            if not file_path.endswith(".py"):
+                continue
+
             try:
                 with open(file_path, "r", encoding="utf-8") as file:
                     source = file.read()
+                    lines = source.splitlines()
+
                     tree = ast.parse(source)
 
                     for node in ast.walk(tree):
@@ -35,8 +41,6 @@ class FindDefinition():
 
                         start = node.lineno
                         end = node.end_lineno
-
-                        lines = source.splitlines()
                         
                         definition = "\n".join(lines[start - 1:end])
 
@@ -49,7 +53,7 @@ class FindDefinition():
                             "docstring": ast.get_docstring(node),
                             "definition": definition
                         })
-            except (UnicodeDecodeError, OSError):
+            except (UnicodeDecodeError, OSError, SyntaxError):
                 continue
 
         return results
